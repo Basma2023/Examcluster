@@ -1,9 +1,8 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: app-a
 spec:
-  serviceName: app-a-service
   replicas: 3
   selector:
     matchLabels:
@@ -14,7 +13,7 @@ spec:
         app: app-a
     spec:
       containers:
-      - name: app-a-container
+      - name: nginx
         image: nginx
         ports:
         - containerPort: 80
