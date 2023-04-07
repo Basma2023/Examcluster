@@ -3,6 +3,7 @@ kind: StatefulSet
 metadata:
   name: app-a
 spec:
+  serviceName: app-a-service
   replicas: 3
   selector:
     matchLabels:
@@ -12,17 +13,12 @@ spec:
       labels:
         app: app-a
     spec:
+      containers:
+      - name: app-a-container
+        image: nginx
+        ports:
+        - containerPort: 80
       affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: zone
-                operator: In
-                values:
-                - "1"
-                - "2"
-                - "3"
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
@@ -32,23 +28,3 @@ spec:
                 values:
                 - app-a
             topologyKey: kubernetes.io/hostname
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - app-b
-            topologyKey: kubernetes.io/hostname
-      containers:
-      - name: app-a
-        image: your-app-a-image
-        ports:
-        - containerPort: 80
-          name: http
-        env:
-        - name: NODE_ID
-          valueFrom:
-            fieldRef:
-              fieldPath: spec.nodeName
