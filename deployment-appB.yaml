@@ -41,7 +41,7 @@ spec:
             topologyKey: kubernetes.io/hostname
       containers:
       - name: app-b
-        image: nginx
+        image: nginx : latest
         ports:
         - containerPort: 80
           name: http
